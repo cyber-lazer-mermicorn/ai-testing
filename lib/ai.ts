@@ -1,10 +1,16 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+function getOpenAIClient(): OpenAI {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is required to call the OpenAI API.');
+  }
+  return new OpenAI({ apiKey });
+}
 
 export async function generateText(prompt: string) {
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: 'gpt-4-turbo-preview',
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 1024,
@@ -17,7 +23,7 @@ export async function generateText(prompt: string) {
 
 export async function classifyText(text: string) {
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: 'gpt-4-turbo-preview',
       messages: [
         { role: 'system', content: 'Classify the text into: positive, negative, neutral' },

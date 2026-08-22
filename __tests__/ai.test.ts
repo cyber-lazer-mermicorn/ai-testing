@@ -2,6 +2,7 @@ import { generateText, classifyText } from '../lib/ai';
 
 // Mock OpenAI
 jest.mock('openai', () => ({
+  __esModule: true,
   default: jest.fn().mockImplementation(() => ({
     chat: {
       completions: {
